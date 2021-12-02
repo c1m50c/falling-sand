@@ -1,5 +1,21 @@
+:root {
+    --base-background-clr: rgb(21, 21, 21);
+    --base-foreground-clr: rgb(248, 248, 248);
+    --base-hover-clr: rgb(226, 179, 90);
+    --top-bar-background-clr: rgb(38, 38, 38);
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 body {
     margin: 0;
+    padding: 0;
+    position: relative;
+    color: var(--base-foreground-clr);
+    background-color: var(--base-background-clr);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
