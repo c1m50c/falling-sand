@@ -1,4 +1,8 @@
 .TopBar {
+    position: relative;
+}
+
+.TopBarContainer {
     background-color: var(--top-bar-background-clr);
     padding: 0 1rem;
     display: flex;
