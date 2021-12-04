@@ -1,4 +1,4 @@
-use super::Vector2U;
+use super::vector::Vector2U;
 
 /// For use within `CellChunk`s, which are used to simulate the Falling Sand Cellular Automata.
 /// 

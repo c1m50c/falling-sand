@@ -1,3 +1,4 @@
-import * as wasm from "wasm-falling-sand";
+import { CellChunk, Vector2U } from "wasm-falling-sand";
 
-wasm.greet();
+const new_chunk = CellChunk.new(Vector2U.new(16, 16));
+alert(new_chunk.cell_count());

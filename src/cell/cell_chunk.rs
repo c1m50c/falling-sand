@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
+use super::vector::Vector2U;
 use super::cell::Cell;
-use super::Vector2U;
 use std::vec::Vec;
 
 
@@ -63,6 +63,11 @@ impl CellChunk {
             size,
             cells,
         };
+    }
+
+    #[inline]
+    pub fn cell_count(&self) -> usize {
+        return self.cells.len();
     }
 
     /// Places a `Cell` at the specified `position` with the material of `m_id`.
