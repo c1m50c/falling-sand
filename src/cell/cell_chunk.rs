@@ -1,3 +1,4 @@
+use wasm_bindgen::prelude::*;
 use super::cell::Cell;
 use super::Vector2U;
 use std::vec::Vec;
@@ -10,6 +11,7 @@ use std::vec::Vec;
 /// pub size: Vector2U // The `cells` Vector will corespond to this field.
 /// cells: Vec<Cell> // Vector containing the `Cell`s of the `CellChunk`.
 /// ```
+#[wasm_bindgen]
 pub struct CellChunk {
     pub size: Vector2U,
     cells: Vec<Cell>,
@@ -26,7 +28,7 @@ impl CellChunk {
     /// ```
     #[inline]
     fn position_index(position: Vector2U, size: Vector2U) -> usize {
-        return (position.1 + (position.0 * size.1)) as usize;
+        return (position.y + (position.x * size.y)) as usize;
     }
 
     /// Returns `true` if the specified `position` is valid within the `size` extents.
@@ -38,20 +40,21 @@ impl CellChunk {
     /// ```
     #[inline]
     fn position_in_bounds(position: Vector2U, size: Vector2U) -> bool {
-        if position.0 > size.0 - 1 || position.1 > size.1 - 1 { return false; }
+        if position.x > size.x - 1 || position.y > size.y - 1 { return false; }
         return true;
     }
 }
 
 
+#[wasm_bindgen]
 impl CellChunk {
     #[inline]
     pub fn new(size: Vector2U) -> Self {
-        let mut cells: Vec<Cell> = Vec::with_capacity((size.0 * size.1) as usize);
+        let mut cells: Vec<Cell> = Vec::with_capacity((size.x * size.y) as usize);
         
-        for x in 0 .. size.0 {
-            for y in 0 .. size.1 {
-                let new_cell: Cell = Cell::new(0, (x, y));
+        for x in 0 .. size.x {
+            for y in 0 .. size.y {
+                let new_cell: Cell = Cell::new(0, Vector2U::new(x, y));
                 cells.push(new_cell);
             }
         }
