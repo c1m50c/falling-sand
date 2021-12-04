@@ -71,7 +71,7 @@ impl CellChunk {
     /// ```
     #[inline]
     pub fn place_cell(&mut self, position: Vector2U, m_id: u32) {
-        self.cells[Self::pos_index(position, self.size)].material_id = m_id;
+        self.cells[Self::position_index(position, self.size)].material_id = m_id;
     }
 
     /// Removes a `Cell` at the specified `position`, replacing its `material_id` with zero.
@@ -82,6 +82,6 @@ impl CellChunk {
     /// ```
     #[inline]
     pub fn remove_cell(&mut self, position: Vector2U) {
-        self.cells[Self::pos_index(position, self.size)].material_id = 0;
+        self.cells[Self::position_index(position, self.size)].material_id = 0;
     }
 }
