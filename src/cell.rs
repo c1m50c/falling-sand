@@ -1,7 +1,7 @@
 use super::vector::Vector2U;
 
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum CellState {
     /// **Fields:** `MaterialId`
     Solid(usize),

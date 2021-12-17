@@ -5,7 +5,7 @@ mod cell;
 use wasm_bindgen::prelude::*;
 use cell::{Cell, CellState};
 use vector::Vector2U;
-use std::vec::Vec;
+use std::{vec::Vec, collections::HashMap};
 
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -15,12 +15,11 @@ use std::vec::Vec;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 
-#[derive(Debug, Clone, Copy)]
-pub enum Faces {
-    North,
-    East,
-    South,
-    West,
+#[derive(Debug, Clone, Copy, Hash)]
+pub enum BelowPositions {
+    BottomRight,
+    BottomLeft,
+    Bottom,
 }
 
 
@@ -76,11 +75,9 @@ impl Simulator {
         /*
             Basic Falling Sand Simulation Rules
             ===================================
-
             1. If the cell below current is empty and current is solid, move current down by one.
             2. If the cell below current is solid and current is solid, attempt to move to the bottom left or right
                 diagnol if either is empty.
-            3. Else do not move the current cell.
 
             Figure 1
             ========
@@ -111,6 +108,8 @@ impl Simulator {
             -------
             |X|X|X|
         */
+
+        let mut result = Self::new(self.size).cells;
         
         for x in 0 .. self.size.x {
             for y in 0 .. self.size.y {
@@ -118,7 +117,7 @@ impl Simulator {
 
                 match current.state {
                     CellState::Solid(m_id) => {
-
+                        
                     },
 
                     CellState::Empty => continue,
@@ -126,5 +125,7 @@ impl Simulator {
 
             }
         }
+
+        self.cells = result;
     }
 }
