@@ -73,6 +73,58 @@ impl Simulator {
     }
     
     pub fn simulate(&mut self) {
+        /*
+            Basic Falling Sand Simulation Rules
+            ===================================
+
+            1. If the cell below current is empty and current is solid, move current down by one.
+            2. If the cell below current is solid and current is solid, attempt to move to the bottom left or right
+                diagnol if either is empty.
+            3. Else do not move the current cell.
+
+            Figure 1
+            ========
+            -------
+            | | | |
+            -------
+            | |X| | <- The Central Cell here would move down coresponding to rule #1.
+            -------
+            | | | |
+            -------
+
+            Figure 2
+            ========
+            -------
+            | | | |
+            -------
+            | |X| | <- The Central Cell here does not apply to rule #1 but can apply to both cases in rule #2.
+            -------
+            | |X| |
+            -------
+
+            Figure 3
+            ========
+            -------
+            | | | |
+            -------
+            | |X| | <- The Central Cell here does not apply to either rule #1 or #2, so we do not move the Cell.
+            -------
+            |X|X|X|
+        */
         
+        for x in 0 .. self.size.x {
+            for y in 0 .. self.size.y {
+                let current = &mut self.cells[Self::position_to_index(Vector2U::new(x, y), self.size)];
+
+                match current.state {
+                    CellState::Solid(m_id) => {
+
+                    },
+
+                    CellState::Empty => continue,
+                }
+
+            }
+        }
     }
 }
