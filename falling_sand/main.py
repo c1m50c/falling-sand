@@ -1,3 +1,7 @@
+"""
+    Module containing the entry-point for the application, and core app logic.
+"""
+
 from typing import Tuple, Set
 import pygame
 
