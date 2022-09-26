@@ -1,14 +1,9 @@
-use yew::{function_component, html};
-
-
-#[function_component(App)]
-fn app() -> Html {
-    html! {
-        <h1>{"Hello, World!"}</h1>
-    }
-}
+use app::App;
+mod app;
 
 
 fn main() {
-    yew::start_app::<App>();
+    yew::start_app_with_props::<App>(
+        (  ),
+    );
 }
