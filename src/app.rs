@@ -1,28 +1,27 @@
-use crate::logic::{Cell, position_to_index};
+use crate::logic::{Cell, CellChunk};
+
+use std::collections::HashMap;
 use fixed_vectors::Vector2;
 use yew::prelude::*;
 
 
-pub const DEFAULT_DIMENSIONS: Vector2<u32> = Vector2::new(512, 512);
-
-
 #[derive(Debug)]
 pub struct App {
-    /// Dimensions of the [`grid`].
-    dimensions: Vector2<u32>,
-
-    /// Contains all [`Cell`]s we use to simulate.
-    grid: Vec<Cell>,
+    chunks: HashMap<Vector2<u32>, CellChunk>,
 }
 
 
 #[derive(PartialEq)]
 pub enum AppMessage {
     /// Event to place a cell at a specified position.
-    PlaceCell { position: Vector2<u32>, material: u32 },
+    PlaceCell { global_position: Vector2<u32>, local_position: Vector2<u32>, material: u32 },
 
     /// Event to remove a cell at a specified position.
-    RemoveCell { position: Vector2<u32> },
+    RemoveCell { global_position: Vector2<u32>, local_position: Vector2<u32> },
+
+    Proccessing,
+
+    Paused,
 }
 
 
@@ -32,25 +31,24 @@ impl Component for App {
 
     fn create(_ctx: &Context<Self>) -> Self {
         return Self {
-            dimensions: DEFAULT_DIMENSIONS,
-            grid: Vec::with_capacity(
-                (DEFAULT_DIMENSIONS.x * DEFAULT_DIMENSIONS.y) as usize
-            ),
+            chunks: HashMap::new(),
         };
     }
 
     #[allow(unreachable_patterns)]
     fn update(&mut self, _ctx: &Context<Self>, message: Self::Message) -> bool {
         return match message {
-            AppMessage::PlaceCell { position, material } => {
-                let index = position_to_index(&position, &self.dimensions);
-                self.grid[index] = Cell::new(material);
+            AppMessage::PlaceCell { global_position, local_position, material } => {
+                let chunk = self.chunks.get_mut(&global_position)
+                    .expect(format!("Expected a CellChunk at position `{:?}`.", &global_position).as_str());
+                chunk[local_position].material = material;
                 true
             },
 
-            AppMessage::RemoveCell { position } => {
-                let index = position_to_index(&position, &self.dimensions);
-                self.grid[index] = Cell::new(0);
+            AppMessage::RemoveCell { global_position, local_position } => {
+                let chunk = self.chunks.get_mut(&global_position)
+                    .expect(format!("Expected a CellChunk at position `{:?}`.", &global_position).as_str());
+                chunk[local_position].material = 0;
                 true
             },
 
