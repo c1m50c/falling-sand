@@ -1,9 +1,8 @@
+pub(crate) mod rendering;
 pub(crate) mod logic;
-
-use app::App;
-mod app;
+pub(crate) mod app;
 
 
 fn main() {
-    yew::start_app_with_props::<App>(());
+    yew::start_app_with_props::<app::App>(());
 }

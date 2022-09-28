@@ -1,2 +1,1 @@
-pub use cell::Cell;
-mod cell;
+pub mod cell;

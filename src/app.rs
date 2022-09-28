@@ -1,4 +1,4 @@
-use crate::logic::Cell;
+use crate::{logic::cell::Cell, rendering::Renderer};
 
 use std::collections::HashMap;
 use fixed_vectors::Vector2;
@@ -79,18 +79,18 @@ impl Component for App {
             .expect("Expected a `HtmlCanvasElement` for `canvas`.");
         
         let web_gl: WebGlRenderingContext = canvas.get_context("webgl")
-            .expect("")
-            .expect("")
+            .unwrap()
+            .unwrap()
             .dyn_into()
-            .expect("");
+            .unwrap();
         
-        web_gl.clear_color(0.12, 0.12, 0.12, 1.0);
-        web_gl.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
+        let renderer = Renderer::new(self, ctx, web_gl);
+        renderer.render();
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         return html! {
-            <canvas ref={self.canvas.clone()} style="min-height: 100%; min-width: 100%" />
+            <canvas ref={self.canvas.clone()} style="min-height: 100%; min-width: 100%;" />
         };
     }
 }
