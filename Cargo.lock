@@ -41,6 +41,8 @@ name = "falling-sand"
 version = "0.1.0"
 dependencies = [
  "fixed-vectors",
+ "wasm-bindgen",
+ "web-sys",
  "yew",
 ]
 

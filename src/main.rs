@@ -5,7 +5,5 @@ mod app;
 
 
 fn main() {
-    yew::start_app_with_props::<App>(
-        (  ),
-    );
+    yew::start_app_with_props::<App>(());
 }

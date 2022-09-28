@@ -7,4 +7,16 @@ edition = "2021"
 
 [dependencies]
 fixed-vectors = "2.0.5"
-yew = "0.19.3"
+wasm-bindgen = "0.2.83"
+yew = { version = "0.19.3"}
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  'HtmlCanvasElement',
+  'WebGlBuffer',
+  'WebGlProgram',
+  'WebGlRenderingContext',
+  'WebGlShader',
+  'WebGlUniformLocation',
+]
