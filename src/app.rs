@@ -1,4 +1,4 @@
-use crate::logic::{Cell, CellChunk};
+use crate::logic::Cell;
 
 use std::collections::HashMap;
 use fixed_vectors::Vector2;
@@ -7,21 +7,23 @@ use yew::prelude::*;
 
 #[derive(Debug)]
 pub struct App {
-    chunks: HashMap<Vector2<u32>, CellChunk>,
+    cells: HashMap<Vector2<u32>, Cell>,
 }
 
 
 #[derive(PartialEq)]
 pub enum AppMessage {
-    /// Event to place a cell at a specified position.
-    PlaceCell { global_position: Vector2<u32>, local_position: Vector2<u32>, material: u32 },
+    /// Places a [`Cell`] at the specified `position` in `cells` with the `material`.
+    PlaceCell { position: Vector2<u32>, material: u32 },
 
-    /// Event to remove a cell at a specified position.
-    RemoveCell { global_position: Vector2<u32>, local_position: Vector2<u32> },
+    /// Removes a [`Cell`] at the specified `position` in `cells`.
+    RemoveCell { position: Vector2<u32> },
 
-    Proccessing,
+    /// Places [`Cell`]s at the given `positions` with the `material`.
+    PlaceCells { positions: Vec<Vector2<u32>>, material: u32 },
 
-    Paused,
+    /// Removes the [`Cell`]s at the given `positions`.
+    RemoveCells { positions: Vec<Vector2<u32>> },
 }
 
 
@@ -31,26 +33,40 @@ impl Component for App {
 
     fn create(_ctx: &Context<Self>) -> Self {
         return Self {
-            chunks: HashMap::new(),
+            cells: HashMap::new(),
         };
     }
 
     #[allow(unreachable_patterns)]
     fn update(&mut self, _ctx: &Context<Self>, message: Self::Message) -> bool {
         return match message {
-            AppMessage::PlaceCell { global_position, local_position, material } => {
-                let chunk = self.chunks.get_mut(&global_position)
-                    .expect(format!("Expected a CellChunk at position `{:?}`.", &global_position).as_str());
-                chunk[local_position].material = material;
+            AppMessage::PlaceCell { position, material } => {
+                if let Some(cell) = self.cells.get_mut(&position) {
+                    cell.material = material;
+                }
                 true
             },
 
-            AppMessage::RemoveCell { global_position, local_position } => {
-                let chunk = self.chunks.get_mut(&global_position)
-                    .expect(format!("Expected a CellChunk at position `{:?}`.", &global_position).as_str());
-                chunk[local_position].material = 0;
+            AppMessage::RemoveCell { position } => {
+                self.cells.remove(&position);
                 true
             },
+
+            AppMessage::PlaceCells { positions, material } => {
+                positions.iter()
+                    .for_each(|p| {
+                        if let Some(cell) = self.cells.get_mut(&p) {
+                            cell.material = material;
+                        }
+                    });
+                true
+            },
+
+            AppMessage::RemoveCells { positions } => {
+                positions.iter()
+                    .for_each(|p| { self.cells.remove(&p); });
+                true
+            }
 
             _ => false,
         };
@@ -58,9 +74,7 @@ impl Component for App {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         return html! {
-            <div>
-                <h1>{ "Hello, World!" }</h1>
-            </div>
+            <canvas />
         };
     }
 }
