@@ -1,15 +1,15 @@
-use crate::{logic::cell::Cell, rendering::Renderer};
+use crate::logic::cell::Cell;
 
+use web_sys::{HtmlCanvasElement, CanvasRenderingContext2d};
 use std::collections::HashMap;
 use fixed_vectors::Vector2;
-use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
 use wasm_bindgen::JsCast;
 use yew::prelude::*;
 
 
 #[derive(Debug)]
 pub struct App {
-    cells: HashMap<Vector2<u32>, Cell>,
+    pub cells: HashMap<Vector2<u32>, Cell>,
     canvas: NodeRef,
 }
 
@@ -35,8 +35,18 @@ impl Component for App {
     type Properties = ();
 
     fn create(_ctx: &Context<Self>) -> Self {
+        let mut map = HashMap::new();
+
+        for x in 0..128 {
+            for y in 0..128 {
+                if x % 2 == 0 && y % 2 == 0 {
+                    map.insert(Vector2::new(x, y), Cell::new(0));
+                }
+            }
+        }
+
         return Self {
-            cells: HashMap::new(),
+            cells: map,
             canvas: NodeRef::default(),
         };
     }
@@ -78,19 +88,24 @@ impl Component for App {
         let canvas = self.canvas.cast::<HtmlCanvasElement>()
             .expect("Expected a `HtmlCanvasElement` for `canvas`.");
         
-        let web_gl: WebGlRenderingContext = canvas.get_context("webgl")
+        let ctx2d: CanvasRenderingContext2d = canvas.get_context("2d")
             .unwrap()
             .unwrap()
             .dyn_into()
             .unwrap();
         
-        let renderer = Renderer::new(self, ctx, web_gl);
-        renderer.render();
+        crate::rendering::render(
+            self, ctx, &ctx2d, 
+            Vector2::new(1.0, 1.0)
+        );
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         return html! {
-            <canvas ref={self.canvas.clone()} style="min-height: 100%; min-width: 100%;" />
+            <canvas
+                ref={self.canvas.clone()}
+                style="min-height: 100%; min-width: 100%; image-rendering: pixelated; image-rendering: crisp-edges;"
+            />
         };
     }
 }

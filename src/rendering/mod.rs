@@ -1,31 +1,18 @@
 use crate::app::App;
 
-use web_sys::WebGlRenderingContext;
+use web_sys::CanvasRenderingContext2d;
+use fixed_vectors::Vector2;
 use yew::Context;
 
 
-#[derive(Debug)]
-pub struct Renderer<'a> {
-    app: &'a mut App,
-    context: &'a Context<App>,
-    web_gl: WebGlRenderingContext
+pub fn render(app: &mut App, _context: &Context<App>, ctx2d: &CanvasRenderingContext2d, dimensions: Vector2<f64>) {    
+    let _ = &app.cells.iter().for_each(|(position, cell)| {
+        draw_cell(ctx2d, &dimensions, position, &cell.material);
+    });
 }
 
 
-impl<'a> Renderer<'a> {
-    /// Constructs a new [`Renderer`] with its required fields.
-    pub fn new(app: &'a mut App, context: &'a Context<App>, web_gl: WebGlRenderingContext) -> Self {
-        return Self {
-            app,
-            context,
-            web_gl,
-        };
-    }
-
-    /// Primary function of the [`Renderer`],
-    /// takes in the current state of the [`App`] and renders a scene to the specified [`WebGlRenderingContext`].
-    pub fn render(self) {
-        self.web_gl.clear_color(0.12, 0.12, 0.12, 1.0);
-        self.web_gl.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
-    }
+fn draw_cell(ctx2d: &CanvasRenderingContext2d, dimensions: &Vector2<f64>, position: &Vector2<u32>, _material: &u32) {
+    let float = Vector2::new(position.x as f64, position.y as f64) * dimensions.clone();    
+    ctx2d.fill_rect(float.x, float.y, dimensions.x, dimensions.y);
 }
